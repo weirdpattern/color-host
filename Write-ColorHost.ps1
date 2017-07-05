@@ -1,3 +1,31 @@
+<#
+.SYNOPSIS
+ Applies color to a single element.
+
+.DESCRIPTION
+ The method
+
+.PARAMETER Object
+ The object to be formatted.
+
+.PARAMETER ForegroundColor
+ The current foreground color to be used.
+
+.PARAMETER BackgroundColor
+ The current background color to be used.
+
+.EXAMPLE
+ Write-SingleColorHost "\033[31mOK\033[0m" # Outputs OK in red
+ Write-SingleColorHost "\e[31mOK\e[0m"     # Outputs OK in red
+ Write-SingleColorHost "$[31mOK$[0m"       # Outputs OK in red
+
+ Write-SingleColorHost "\033[41mOK\033[0m" # Outputs OK in red background
+ Write-SingleColorHost "\e[41mOK\e[0m"     # Outputs OK in red background
+ Write-SingleColorHost "$[41mOK$[0m"       # Outputs OK in red background
+
+.NOTES
+ This is a private method
+#>
 function Write-SingleColorHost {
   PARAM (
 		[Parameter(Position=0)]
@@ -12,32 +40,32 @@ function Write-SingleColorHost {
       Write-Host "" -NoNewline
       Return
 
-    # For non-strings failfast and just let Write-Host do its thing
+    # For non-strings fail fast and just let Write-Host do its thing
     } elseif ($Object.GetType().FullName -ne "System.String") {
       Write-Host $Object `
-            -NoNewline
+            -NoNewline `
             -ForegroundColor $foreground `
             -BackgroundColor $background
       Return
     }
 
     # Get the tokens to be processed
-    # $token contains everything before the first escape character (\033, $ or \e)
     # $coloredTokens contains each one of the ansi color blocks
-    $token, $coloredTokens = ([Regex]"(\\033|\$|\\e)\[").Split($Object)
+    $coloredTokens = ([Regex]"(?:\\033|\$|\\e)\[(\d{1,2});?(\d{0,3})m").Matches($Object)
 
-    # Write the first token using the default foreground and background
-    Write-Host $token `
-          -NoNewline `
-          -ForegroundColor $foreground `
-          -BackgroundColor $background
-
-    # Second loop to process each one of the ansi color blocks
+    # Loop through all $coloredTokens
+    $index = 0
     foreach ($coloredToken in $coloredTokens) {
 
-      # Get the foreground and background colors
-      $colorCodes, $token = ([Regex]"m").Split($coloredToken, 2)
-      ([Regex]";").split($colorCodes) | ForEach-Object {
+      # Output everything before the token
+      $token = $Object.Substring($index, $coloredToken.Index - $index)
+      Write-Host $token `
+            -NoNewline `
+            -ForegroundColor $foreground `
+            -BackgroundColor $background
+
+      # Pick the new colors
+      $coloredtoken.Groups | ForEach-Object {
         switch -regex ($_) {
           "^0{1,2}$" { $foreground, $background = $foregroundColor, $backgroundColor }
           "^30$"     { $foreground              = "Black"                            }
@@ -77,12 +105,16 @@ function Write-SingleColorHost {
         }
       }
 
-      # Write the last token using the last selected foreground and background
-      Write-Host $token `
-            -NoNewLine `
-            -foregroundColor $foreground `
-            -backgroundColor $background
+      # Move the index to the end of the current colored token
+      $index = $coloredToken.Index + $coloredToken.Length
     }
+
+    # Output the rest of the string
+    $token = $Object.Substring($index)
+    Write-Host $token `
+          -NoNewline `
+          -ForegroundColor $foreground `
+          -BackgroundColor $background
   }
 }
 
@@ -102,53 +134,20 @@ function Write-ColorHost
   }
   PROCESS {
 
-    # We only process non-nullable objects
-    if ($Object -eq $Null) {
-      Write-Host ""
-      Break
-    }
+    # Flatten the object
+    $Object = @($Object | ForEach-Object { $_ })
 
-    # Strings are enumerables, but they behave differently
-    # So we need to process these before other enumerables
-    if ($Object.GetType().FullName -eq "System.String") {
+    # Loop thought all the items, processing one at the time
+    $index = $Object.Count
+    foreach ($element in $Object) {
 
-      # Process the element
-      Write-SingleColorHost $Object `
+      # Recursively call the function
+      Write-SingleColorHost $element `
             -ForegroundColor $foreground `
             -BackgroundColor $background
 
-      # Finally append a new line if needed
-      if (!$NoNewLine) { Write-Host }
-
-    # Handle enumerables
-    } elseif ($Object.Count) {
-
-      # Loop thought all the items, processing one at the time
-      $index = 0
-      foreach ($element in $Object) {
-
-        # Process the element
-        Write-SingleColorHost $element `
-              -ForegroundColor $foreground `
-              -BackgroundColor $background
-
-        # For lists, support the separator
-        if ($index++ -lt ($Object.Count - 1)) {
-          Write-Host $Separator -NoNewline
-        }
-
-      }
-
-      # Finally append a new line if needed
-		  if (!$NoNewLine) { Write-Host }
-
-    # Handle the rest
-    } else {
-
-      # Write the object as is
-      Write-Host $Object `
-            -ForegroundColor $foreground `
-            -BackgroundColor $background
+      # For lists, support the separator
+      if (--$index -gt 0) { Write-Host $Separator -NoNewline }
     }
   }
 }
