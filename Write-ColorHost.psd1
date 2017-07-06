@@ -5,5 +5,5 @@
   Author = 'Patricio Trevino'
   PowerShellVersion = '3.0'
   FunctionsToExport = 'Write-ColorHost'
-  AliasesToExport = 'Write-Ansi', 'Write-Color', 'Write-AnsiColor', 'Write-AnsiHost'
+  AliasesToExport = 'Write-AnsiHost', 'Write-VT100Host'
 }
