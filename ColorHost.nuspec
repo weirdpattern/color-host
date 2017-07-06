@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ColorHost</id>
+    <version>1.0.0</version>
+    <authors>Patricio Trevino</authors>
+    <owners>Patricio Trevino</owners>
+    <licenseUrl>https://github.com/weirdpattern/color-host/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/weirdpattern/color-host</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+# ColorHost
+A PowerShell module to write customized output to a host.
+
+## Usage
+The module can be used in two different ways
+
+### As a regular cmdlet
+
+```powershell
+Write-ColorHost
+    [[-Objects] <Object[]>]
+    [-NoNewLine]
+    [-Separator <Object>]
+    [-ForegroundColor { ConsoleColor | string }]
+    [-BackgroundColor { ConsoleColor | string }]
+    [<\CommonParameters\>]
+```
+
+### As part of the pipeline
+
+```powershell
+Object | Write-ColorHost
+           [-NoNewLine]
+           [-Separator <Object>]
+           [-ForegroundColor { ConsoleColor | string }]
+           [-BackgroundColor { ConsoleColor | string }]
+           [<\CommonParameters\>]
+```
+
+    </description>
+    <copyright>Copyright 2017</copyright>
+    <tags>powershell console host write write-host color output ansi vt100</tags>
+    <dependencies>
+      <dependency id="chocolatey" version="0.9.10" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\*" target="tools" />
+  </files>
+</package>

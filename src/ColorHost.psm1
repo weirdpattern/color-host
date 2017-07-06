@@ -2,7 +2,7 @@
   .SYNOPSIS PowerShell module for ANSI/VT100 color codes.
 #>
 
-. $PSScriptRoot\WriteUtils.ps1
+. $PSScriptRoot\Utils.ps1
 
 <#
   .SYNOPSIS
