@@ -68,11 +68,13 @@ __ColorHost__ supports all of them plus the character `$` (sooner or later you w
 __ColorHost__ supports the following control sequences:
 
 __Reset__
+
 | Code | Description          | Example                             |
 | :--: | -------------------- | ----------------------------------- |
 | 0    | Reset all attributes | `Write-ColorHost "$[0mNormal text"` |
 
 __Foreground__
+
 | Code | Description              | Example                                     | Equivalent                                                                 |
 | :--: | ------------------------ | ------------------------------------------- | -------------------------------------------------------------------------- |
 | 39   | Default foreground color | `Write-ColorHost "$[39mNormal text"`        | `Write-Host "Normal text" -ForegroundColor $HOST.UI.RawUI.ForegroundColor` |
@@ -94,6 +96,7 @@ __Foreground__
 | 97   | White                    | `Write-ColorHost "$[97mWhite text"`         | `Write-Host "Normal text" -ForegroundColor White`                          |
 
 __Background__
+
 | Code | Description              | Example                                      | Equivalent                                                                 |
 | :--: | ------------------------ | -------------------------------------------- | -------------------------------------------------------------------------- |
 | 49   | Default background color | `Write-ColorHost "$[49mNormal text"`         | `Write-Host "Normal text" -BackgroundColor $HOST.UI.RawUI.BackgroundColor` |
