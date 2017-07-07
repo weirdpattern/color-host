@@ -10,10 +10,33 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
 # ColorHost
-A PowerShell module to write customized output to a host.
+A PowerShell module to write colorful messages to a host.
+
+## TL;DR;
+__ColorHost__ lets you format messages you output to the host. With __ColorHost__ you can say goodbye to the thousands of lines of code needed to format a simple message.
+
+Consider this output message:
+![Output]()
+
+To get this, you need these lines of code:
+```powershell
+Write-Host "ColorHost " -ForegroundColor Green -NoNewLine
+Write-Host "lets you write colorful " -NoNewLine
+Write-Host "messages" -ForegroundColor Red
+```
+
+__ColorHost__ converts that into this:
+```powershell
+Write-ColorHost "$[32mColorHost$[0m lets you write colorful $[31mmessages$[0m"
+```
+
+## Installation
+```powershell
+choco install ColorHost
+```
 
 ## Usage
-The module can be used in two different ways
+The module can be used in two different ways.
 
 ### As a regular cmdlet
 
@@ -38,6 +61,8 @@ Object | Write-ColorHost
            [<\CommonParameters\>]
 ```
 
+Note: __ColorHost__ is 100% compatible with __Write-Host__, in fact, both functions behave the same way and produce exactly the same outputs. Please refer to
+[Write-Host](https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.utility/write-host) documentation for a detail description on how objects are processed.
     </description>
     <copyright>Copyright 2017</copyright>
     <tags>powershell console host write write-host color output ansi vt100</tags>

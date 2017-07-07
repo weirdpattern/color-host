@@ -1,11 +1,19 @@
+#########################################################################
+# Copyright (c) 2017, Patricio Trevino                                  #
+# All rights reserved.                                                  #
+#                                                                       #
+# This source code is licensed under the MIT-style license found in the #
+# LICENSE file in the root directory of this source tree.               #
+#########################################################################
+
 [System.String] $root = Split-Path -Parent (Split-Path -Parent $Script:MyInvocation.MyCommand.Path)
 [System.String] $src = Join-Path -Path $root -ChildPath "src"
 [System.String] $global:defaultForeground = $HOST.UI.RawUI.ForegroundColor.ToString()
 [System.String] $global:defaultBackground = $HOST.UI.RawUI.BackgroundColor.ToString()
 
-Import-Module (Join-Path -Path $src -ChildPath "Write-ColorHost.psm1") -Force
+Import-Module (Join-Path -Path $src -ChildPath "ColorHost.psm1") -Force
 
-InModuleScope "Write-ColorHost" {
+InModuleScope "ColorHost" {
   Describe "Writing colored output messages" {
     BeforeEach {
       $global:message = ""
@@ -20,6 +28,12 @@ InModuleScope "Write-ColorHost" {
     }
 
     Context "Passing arguments" {
+      It "Accepts \x1B as escape character" {
+        Write-ColorHost "\x1B[31mOK\x1B[0m"
+        Assert-MockCalled "Write-Host" -Exactly 4 -Scope It
+        $global:message | Should Be "OK"
+      }
+
       It "Accepts \033 as escape character" {
         Write-ColorHost "\033[31mOK\033[0m"
         Assert-MockCalled "Write-Host" -Exactly 4 -Scope It
@@ -107,6 +121,12 @@ InModuleScope "Write-ColorHost" {
     }
 
     Context "Pipelining" {
+      It "Accepts \x1B as escape character" {
+        "\x1B[31mOK\x1B[0m" | Write-ColorHost
+        Assert-MockCalled "Write-Host" -Exactly 4 -Scope It
+        $global:message | Should Be "OK"
+      }
+
       It "Accepts \033 as escape character" {
         "\033[31mOK\033[0m" | Write-ColorHost
         Assert-MockCalled "Write-Host" -Exactly 4 -Scope It

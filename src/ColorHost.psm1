@@ -1,3 +1,11 @@
+#########################################################################
+# Copyright (c) 2017, Patricio Trevino                                  #
+# All rights reserved.                                                  #
+#                                                                       #
+# This source code is licensed under the MIT-style license found in the #
+# LICENSE file in the root directory of this source tree.               #
+#########################################################################
+
 <#
   .SYNOPSIS PowerShell module for ANSI/VT100 color codes.
 #>
@@ -19,7 +27,7 @@
                             <escape_char><color>[;<color>]m
 
       Where
-         escape_char is one of these: \033[, \e[, $[
+         escape_char is one of these: $[, \e[, \033[, \x1B[
          color is a digit
 
       Valid colors are:

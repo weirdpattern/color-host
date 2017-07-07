@@ -1,3 +1,11 @@
+#########################################################################
+# Copyright (c) 2017, Patricio Trevino                                  #
+# All rights reserved.                                                  #
+#                                                                       #
+# This source code is licensed under the MIT-style license found in the #
+# LICENSE file in the root directory of this source tree.               #
+#########################################################################
+
 <#
   .SYNOPSIS
       Parses the given object looking for ANSI/VT100 codes.
@@ -54,6 +62,13 @@
       -- White
 
   .EXAMPLE
+      Write-PrivateColorHost "\x1B[31mOK\x1B[0m"
+      # Outputs 'OK' in red foreground
+
+      Same as writing
+      Write-Host 'OK' -ForegroundColor Red
+
+  .EXAMPLE
       Write-PrivateColorHost "\033[31mOK\033[0m"
       # Outputs 'OK' in red foreground
 
@@ -82,6 +97,13 @@
       Write-Host 'OK' -ForegroundColor Red
 
   .EXAMPLE
+      Write-PrivateColorHost "\x1B[41mOK\x1B[0m"
+      # Outputs 'OK' in red background
+
+      Same as writing
+      Write-Host 'OK' -ForegroundColor Red
+
+  .EXAMPLE
       Write-PrivateColorHost "\e[41mOK\e[0m"
       # Outputs 'OK' in red background
 
@@ -97,6 +119,13 @@
 
   .EXAMPLE
       Write-PrivateColorHost "\033[32;41mOK\033[0m"
+      # Outputs 'OK' in green foreground and red background
+
+      Same as writing
+      Write-Host 'OK' -ForegroundColor Green -BackgroundColor Red
+
+  .EXAMPLE
+      Write-PrivateColorHost "\0x1B[32;41mOK\x1B[0m"
       # Outputs 'OK' in green foreground and red background
 
       Same as writing
@@ -156,7 +185,7 @@ function Write-PrivateColorHost {
 
     # Get the tokens to be processed
     # $coloredTokens contains each one of the ansi color blocks
-    $coloredTokens = ([Regex]"(?:\\033|\$|\\e)\[(\d{1,2});?(\d{0,3})m").Matches($Object)
+    $coloredTokens = ([Regex]"(?:\\x1B|\\033|\$|\\e)\[(\d{1,2});?(\d{0,3})m").Matches($Object)
 
     # Loop through all $coloredTokens
     $index = 0
