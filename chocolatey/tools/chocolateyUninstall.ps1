@@ -2,11 +2,10 @@
 
 try {
     $colorHostPath = join-path (Get-ToolsLocation) 'colorhost'
-    $currentVersionPath = Get-ChildItem "$colorHostPath\*ColorHost*\" | Sort-Object -Property LastWriteTime | Select-Object -Last 1
 
-    if(Test-Path $PROFILE) {
-        $oldProfile = @(Get-Content $PROFILE)
-        $oldProfileEncoding = Get-FileEncoding $PROFILE
+    if(Test-Path $Profile) {
+        $oldProfile = @(Get-Content $Profile)
+        $oldProfileEncoding = Get-FileEncoding $Profile
 
         $newProfile = @()
         foreach($line in $oldProfile) {
@@ -15,7 +14,7 @@ try {
             }
             $newProfile += $line
         }
-        Set-Content -Path $profile -Value $newProfile -Force -Encoding $oldProfileEncoding
+        Set-Content -Path $Profile -Value $newProfile -Force -Encoding $oldProfileEncoding
     }
 
     try {
@@ -29,7 +28,7 @@ try {
 } catch {
   try {
     if ($oldProfile) {
-      Set-Content -Path $PROFILE -Value $oldProfile -Force -Encoding $oldProfileEncoding
+      Set-Content -Path $Profile -Value $oldProfile -Force -Encoding $oldProfileEncoding
     }
   }
   catch {}

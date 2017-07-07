@@ -7,6 +7,8 @@ try {
       if (test-path($colorHostPath)) {
         Write-Host "Attempting to remove existing `'$colorHostPath`'."
         Remove-Item $colorHostPath -Recurse -Force
+      } else {
+        MkDir $colorHostPath
       }
     } catch {
       Write-Host "Could not remove `'$colorHostPath`'"
@@ -18,12 +20,13 @@ try {
     }
 
     $colorHostInstall = "https://github.com/weirdpattern/color-host/zipball/$version"
-    $zip = Install-ChocolateyZipPackage 'colorhost' $colorHostInstall $colorHostPath
+
+    Install-ChocolateyZipPackage 'colorhost' $colorHostInstall $colorHostPath
     $currentVersionPath = Get-ChildItem "$colorHostPath\*ColorHost*\" | Sort-Object -Property LastWriteTime | Select-Object -Last 1
 
-    if(Test-Path $PROFILE) {
-        $oldProfile = @(Get-Content $PROFILE)
-        $oldProfileEncoding = Get-FileEncoding $PROFILE
+    if(Test-Path $Profile) {
+        $oldProfile = @(Get-Content $Profile)
+        $oldProfileEncoding = Get-FileEncoding $Profile
 
         $newProfile = @()
         foreach($line in $oldProfile) {
@@ -32,12 +35,12 @@ try {
             }
             $newProfile += $line
         }
-        Set-Content -Path $profile -Value $newProfile -Force -Encoding $oldProfileEncoding
+        Set-Content -Path $Profile -Value $newProfile -Force -Encoding $oldProfileEncoding
     }
 } catch {
   try {
     if ($oldProfile) {
-      Set-Content -Path $PROFILE -Value $oldProfile -Force -Encoding $oldProfileEncoding
+      Set-Content -Path $Profile -Value $oldProfile -Force -Encoding $oldProfileEncoding
     }
   }
   catch {}
