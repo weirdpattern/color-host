@@ -20,9 +20,16 @@ Write-ColorHost "$[32mColorHost$[0m lets you write colorful $[31mmessages$[0m"
 ```
 
 ## Installation
+Using PSGet
 ```powershell
-choco install ColorHost
+Install-Module ColorHost
 ```
+
+Alternatively you can do a manual installation
+1. Download `src/*` from [http://github.com/weirdpattern/color-host](http://github.com/weirdpattern/color-host)
+2. Copy all files to your modules folder (e.g. `Modules\ColorHost\`)
+3. Execute `Import-Module ColorHost` (or add this to your profile)
+4. Enjoy!
 
 ## Usage
 The module can be used in two different ways.
