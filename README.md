@@ -5,7 +5,7 @@ A PowerShell module to write colorful messages to a host.
 __ColorHost__ lets you format messages you output to the host. With __ColorHost__ you can say goodbye to the thousands of lines of code needed to format a simple message.  
 
 Consider this output message:   
-![Output]()
+![Output](https://user-images.githubusercontent.com/19519411/27975613-a083675a-6328-11e7-9490-f6ec4ed51795.png)
 
 To get this, you need these lines of code:
 ```powershell
