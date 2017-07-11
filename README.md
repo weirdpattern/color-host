@@ -125,3 +125,6 @@ __Background__
 | 107  | White                    | `Write-ColorHost "$[107mWhite text"`         | `Write-Host "Normal text" -BackgroundColor White`                          |
 
 Sequences can be combined using `;`, e.g. `Write-ColorHost $[31;42mOK$[0m` will output the 'OK' in red on a green background.
+
+## License
+MIT © Patricio Trevino
